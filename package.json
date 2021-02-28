@@ -1,0 +1,57 @@
+{
+    "name": "cli",
+    "version": "0.0.1",
+    "description": "This is an example CLI, please check for `TODO: change this!` throughout the code!",
+    "repository": "https://github.com/GregTheGreek/hydra.git",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/GregTheGreek/hydra/issues"
+    },
+    "homepage": "https://github.com/GregTheGreek/hydra#readme",
+    "main": "lib/index.js",
+    "files": [
+        "lib/**/*.d.ts",
+        "lib/**/*.js",
+        "lib/**/*.js.map"
+    ],
+    "bin": {
+        "cli": "lib/index.js"
+    },
+    "scripts": {
+        "clean": "rm -rf lib && rm -f tsconfig.tsbuildinfo",
+        "build": "concurrently \"yarn build:lib\" \"yarn build:types\"",
+        "build:release": "yarn clean && yarn run build && yarn run build:typedocs",
+        "build:lib": "babel src -x .ts -d lib --source-maps",
+        "build:lib:watch": "yarn run build:lib --watch",
+        "build:typedocs": "typedoc --exclude src/index.ts --out typedocs src",
+        "build:types": "tsc --project tsconfig.build.json --incremental --declaration --outDir lib --emitDeclarationOnly",
+        "build:types:watch": "yarn run build:types --watch --preserveWatchOutput",
+        "build:refdocs": "ts-node docsgen docs/cli.md",
+        "check-types": "tsc --noEmit",
+        "lint": "eslint --color --ext .ts src/ test/",
+        "lint:fix": "yarn run lint --fix",
+        "pretest": "yarn run check-types",
+        "test:unit": "TS_NODE_PROJECT=tsconfig.test.json nyc --cache-dir .nyc_output/.cache -e .ts mocha 'test/unit/**/*.test.ts'",
+        "test:e2e": "TS_NODE_PROJECT=tsconfig.test.json mocha --timeout 30000 'test/e2e/**/*.test.ts'",
+        "test": "yarn test:unit && yarn test:e2e",
+        "coverage": "codecov -F cli",
+        "benchmark": "ts-node test/benchmarks"
+    },
+    "dependencies": {
+        "concurrently": "^6.0.0",
+        "yargs": "^16.2.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.12.10",
+        "@babel/core": "^7.12.10",
+        "@babel/plugin-proposal-class-properties": "^7.12.1",
+        "@babel/preset-env": "^7.12.11",
+        "@babel/preset-typescript": "^7.12.7",
+        "@types/jest": "^26.0.14",
+        "@types/node": "^14.14.22",
+        "babel-plugin-const-enum": "^1.0.1",
+        "jest": "^26.5.3",
+        "ts-jest": "^26.4.4",
+        "typescript": "^3.9.7"
+    }
+}
