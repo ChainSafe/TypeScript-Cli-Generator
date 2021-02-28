@@ -5,9 +5,9 @@ import {YargsError} from "./util";
 import {getCli} from "./cli";
 import "source-map-support/register";
 
-const lodestar = getCli();
+const cli = getCli();
 
-lodestar
+cli
   .fail((msg, err) => {
     if (msg) {
       // Show command help message when no command is provided

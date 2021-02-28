@@ -5,6 +5,11 @@ This template was a port of the [Lodestar CLI](https://github.com/ChainSafe/lode
 ### Using this tempalte
 In its current state, the best way to use this template is to fork it, and modify it that way. The CLI makes use of Yargs, and has added some very helpful utilities to make it easier to use with TypeScript.
 
+#### Testing it out
+1. `yarn` or `npm install`
+2. `yarn build` or `npm run build`
+3. `./bin/cli --help`
+
 #### Modifications
 Although there is a lot that can be changed, the bulk of the setup has been done for you. The main things that need updating can be searched for by looking up `// TODO: change this!`. After that, the world is your oyster.
 
