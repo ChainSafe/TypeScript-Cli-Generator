@@ -156,7 +156,7 @@ const createCommandFiles = async (
         // Write files
         await writeFile(`${dirPath}/${TemplateOut.commandOptions}`, command.options);
         await writeFile(`${dirPath}/${TemplateOut.commandHandler}`, command.handler);
-        await writeFile(`${dirPath}/${TemplateOut.commandIndex}`, command.options);
+        await writeFile(`${dirPath}/${TemplateOut.commandIndex}`, command.index);
 
         // Handle subCommands
         if (command.subCommands && command.subCommands.length > 0) {

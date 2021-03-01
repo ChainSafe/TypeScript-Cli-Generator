@@ -1,11 +1,10 @@
 import {ICliCommand} from "../util";
-import {IGlobalArgs} from "../options";
-import {generate} from "./generate";<%- -%>
+import {IGlobalArgs} from "../options";<%- -%>
 <% for (let i = 0; i < cmdNames.length; i++) { %>
 import {<%= cmdNames[i] -%>} from "./<%= cmdNames[i] %>";<%- -%>
 <% } %>
 
-export const cmds: Required<ICliCommand<IGlobalArgs, Record<never, never>>>["subcommands"] = [
+export const cmds: Required<ICliCommand<IGlobalArgs, Record<never, never>>>["subcommands"] = [<%- -%>
     <% for (let i = 0; i < cmdNames.length; i++) { %>
     <%= cmdNames[i] -%>, <%- -%>
     <% } %>

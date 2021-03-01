@@ -23,6 +23,6 @@ export const <%= name.toLowerCase()%>: ICliCommand<Record<never, never>, I<%= na
   <% if (subCommands && subCommands.length > 0) { %>
   subCommands: [<%= subCommands.map(x => x.name) %>]
   <% } else { %>
-  handler: <%= name.toLowerCase() %>Handler
+  handler: <%= name.toLowerCase() %>Handler<%- -%>
   <% } %>
 };

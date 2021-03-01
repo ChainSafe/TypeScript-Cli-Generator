@@ -9,7 +9,7 @@ const exampleJson = `
             "default": "Hello World!"
         },
         {
-            "name": "example",
+            "name": "example2",
             "description": "This is an example",
             "type": "string",
             "default": "Hello World!"
@@ -35,13 +35,13 @@ const exampleJson = `
             "options": [],
             "subCommands": [
                 {
-                    "name": "magic",
+                    "name": "Magic",
                     "description": "Perform a magic trick",
                     "options": [],
                     "subCommands": []
                 },
                 {
-                    "name": "flip",
+                    "name": "Flip",
                     "description": "Perform a flip",
                     "options": [],
                     "subCommands": []

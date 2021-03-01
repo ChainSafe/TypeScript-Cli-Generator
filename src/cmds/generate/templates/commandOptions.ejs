@@ -1,9 +1,9 @@
-import {ICliCommandOptions} from "../util";
+import {ICliCommandOptions} from "../../<%= "../".repeat(2 * depth) %>util";
 
-export interface I<%= name %>Args {
+export interface I<%= name %>Args {<%- -%>
     <% for (const opt of options) { %>
         <%= opt.name %>: <%= opt.type %>;
-    <% } %>
+    <% } %><%- -%>
 }
 
 export const <%= name.toLowerCase() %>Options: ICliCommandOptions<I<%= name %>Args> = {
@@ -14,5 +14,5 @@ export const <%= name.toLowerCase() %>Options: ICliCommandOptions<I<%= name %>Ar
             default: "<%= opt.default %>",
             type: "<%= opt.type %>"
         },
-    <% } %>
+    <% } %><%- -%>
 };
