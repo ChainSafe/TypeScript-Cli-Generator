@@ -1,6 +1,6 @@
 import ejs from "ejs";
 import fs from "fs";
-import path from "path";
+import path, { dirname } from "path";
 import {ICommand, IConfigFile} from "./configTypes";
 import exampleJson from "./fake";
 
@@ -14,11 +14,11 @@ enum TemplateFiles {
 
 enum TemplateOut {
     base = "./_template/src",
-    globalOptions = "/options/globalOptions.ts",
-    commandOptions = "/options.ts",
-    commandHandler = "/handler.ts",
-    commandIndex = "/index.ts",
-    rootCommandIndex = "/index.ts",
+    globalOptions = "options/globalOptions.ts",
+    commandOptions = "options.ts",
+    commandHandler = "handler.ts",
+    commandIndex = "index.ts",
+    rootCommandIndex = "index.ts",
 }
 
 interface ICommandStore {
@@ -95,23 +95,30 @@ export async function generateHandler(args: any): Promise<void> {
 const createFiles = async (fileStore: IFileStore) => {
     console.log(fileStore)
     // 1. Global Options
-    let fileName: string = TemplateOut.base + TemplateOut.globalOptions;
+    let fileName: string = `${TemplateOut.base}/${TemplateOut.globalOptions}`;
     await writeFile(fileName, fileStore.globalOptions);
 
     // 2. Root Command File
-    fileName = TemplateOut.base + "./cmds" + TemplateOut.rootCommandIndex;
+    fileName = `${TemplateOut.base}/cmds/${TemplateOut.rootCommandIndex}`;
     await writeFile(fileName, fileStore.rootCommandIndex);
 
     // 3. Commands
     Promise.resolve(fileStore.commands.forEach(async (command) => {
         // Create directory
-        const dirPath = TemplateOut.base + "./cmds/" + command.name;
+        const dirPath = `${TemplateOut.base}/cmds/${command.name}`;
         writeDir(dirPath);
+
+        // Write files
+        writeFile(`${dirPath}/${TemplateOut.commandOptions}`, command.options);
+        writeFile(`${dirPath}/${TemplateOut.commandHandler}`, command.handler);
+        writeFile(`${dirPath}/${TemplateOut.commandIndex}`, command.options);
+
+        // TODO subCommands
     }));
 }
 
-const writeDir = async (dirName: string) => {};
-const writeFile = async (filename: string, data: string) => {};
+const writeDir = async (dirName: string) => {console.log(dirName + "    <-- directory")};
+const writeFile = async (filename: string, data: string) => {console.log(filename)};
 
 const generateCommands = async (
     commands: ICommand[],
