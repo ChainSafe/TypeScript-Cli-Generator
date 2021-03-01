@@ -1,15 +1,15 @@
 const exampleJson = `
 {
-    "name": "demoCli",
+    "name": "files-cli",
     "globalOptions": [
         {
-            "name": "example",
-            "description": "This is an example",
+            "name": "url",
+            "description": "URL of the files API to connect to.",
             "type": "string",
-            "default": "Hello World!"
+            "default": "http://files.chainsafe.io/api"
         },
         {
-            "name": "example2",
+            "name": "",
             "description": "This is an example",
             "type": "string",
             "default": "Hello World!"
@@ -17,27 +17,34 @@ const exampleJson = `
     ],
     "commands": [
         {
-            "name": "Log",
-            "description": "Console logs whatever the user inputs",
-            "options": [
-                {
-                    "name": "message",
-                    "description": "The message to console.log",
-                    "type": "string",
-                    "default": "Hello World!"
-                }
-            ],
-            "subCommands": []
-        },
-        {
-            "name": "Account",
-            "description": "Account command",
-            "options": [],
-            "subCommands": [
-                {
-                    "name": "Magic",
-                    "description": "Perform a magic trick",
-                    "options": [],
+            "name": "Upload",
+                "description": "Console logs whatever the user inputs",
+                "options": [
+                    {
+                        "name": "message",
+                        "description": "The message to console.log",
+                        "type": "string",
+                        "default": "Hello World!"
+                    }
+                ],
+                "subCommands": []
+            },
+            {
+                "name": "Account",
+                "description": "Account commands",
+                "options": [],
+                "subCommands": [
+                    {
+                        "name": "Login",
+                        "description": "Perform a magic trick",
+                        "options": [
+                            {
+                                "name": "apiKey",
+                                "description": "Files API for login in.",
+                                "type": "string",
+                                "default": "Hello World!"
+                            }
+                        ],
                     "subCommands": []
                 },
                 {
