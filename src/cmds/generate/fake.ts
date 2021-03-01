@@ -1,5 +1,6 @@
 const exampleJson = `
 {
+    "name": "demoCli",
     "globalOptions": [
         {
             "name": "example",

@@ -1,5 +1,6 @@
 import ejs from "ejs";
 import fs from "fs";
+import fse from "fs-extra";
 import path, { dirname } from "path";
 import {ICommand, IConfigFile} from "./configTypes";
 import exampleJson from "./fake";
@@ -13,7 +14,6 @@ enum TemplateFiles {
 }
 
 enum TemplateOut {
-    base = "./_template/src",
     globalOptions = "options/globalOptions.ts",
     commandOptions = "options.ts",
     commandHandler = "handler.ts",
@@ -47,6 +47,9 @@ interface ILoggerState {
 // Use defaults for now
 const ejsOpts = {};
 
+// Vars
+const BASE_PATH = path.join(process.cwd(), "./_template/src");
+
 // loggerState
 const loggerState: ILoggerState = {
     files: [],
@@ -73,7 +76,7 @@ export async function generateHandler(args: any): Promise<void> {
     fileStore.rootCommandIndex = await generateEjs(TemplateFiles.rootCommandIndex, {cmdNames}, ejsOpts);
 
     // 4. Write files
-    await createFiles(fileStore);
+    await createFiles(fileStore, args.outDir);
 
     // 5. Log summary
     logSummary();
@@ -113,13 +116,16 @@ const logSummary = () => {
  * |  |  |  |  |  |-handler.ts
  * |  |  |  |  |  |-[...]
  */
-const createFiles = async (fileStore: IFileStore): Promise<void> => {
-    // 1. Global Options
-    let fileName: string = `${TemplateOut.base}/${TemplateOut.globalOptions}`;
+const createFiles = async (fileStore: IFileStore, outDir: string): Promise<void> => {
+    // 1. Copy to _template to destination
+    fse.copySync(path.join(process.cwd(), "_templates"), path.join(process.cwd(), outDir));
+
+    // 2. Global Options
+    let fileName: string = `${BASE_PATH}/${TemplateOut.globalOptions}`;
     await writeFile(fileName, fileStore.globalOptions);
 
     // 2. Root Command File
-    fileName = `${TemplateOut.base}/cmds/${TemplateOut.rootCommandIndex}`;
+    fileName = `${BASE_PATH}/cmds/${TemplateOut.rootCommandIndex}`;
     await writeFile(fileName, fileStore.rootCommandIndex);
 
     // 3. Commands
@@ -128,7 +134,7 @@ const createFiles = async (fileStore: IFileStore): Promise<void> => {
 
 const createCommandFiles = async (
     commands: ICommandStore[],
-    basePath: string = TemplateOut.base
+    basePath: string = BASE_PATH
 ): Promise<void> => {
     for (const command of commands) {
         // Create directory
@@ -147,12 +153,27 @@ const createCommandFiles = async (
     };
 }
 
-const writeDir = async (dirName: string) => {
-    loggerState.files.push(dirName + "    <-- directory")
+const writeDir = async (dir: string) => {
+    try {
+        if (!fs.existsSync(dir)) {
+            // fs.mkdirSync(dir);
+            loggerState.files.push(dir + "    <-- directory (created)");
+        } 
+    } catch (e) {
+        loggerState.files.push(dir + "    <-- directory (already existed)");
+        console.log(e);
+    }
+
 };
 
 const writeFile = async (filename: string, data: string) => {
-    loggerState.files.push(filename)
+    try {
+        // fs.writeFileSync(filename, data);
+        loggerState.files.push(filename + "    (created)");
+    } catch (e) {
+        loggerState.files.push(filename + "    (already existed)");
+        console.log(e);
+    }
 };
 
 const generateCommands = async (
