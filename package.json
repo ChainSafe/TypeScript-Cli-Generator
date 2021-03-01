@@ -1,13 +1,13 @@
 {
-    "name": "cli",
+    "name": "@ChainSafe/ts-cli-gen",
     "version": "0.0.1",
-    "description": "This is an example CLI, please check for `TODO: change this!` throughout the code!",
-    "repository": "https://github.com/GregTheGreek/hydra.git",
+    "description": "This is a TypeScript CLI generator!",
+    "repository": "https://github.com/ChainSafe/TypeScript-Cli-Template.git",
     "license": "GPL-3.0",
     "bugs": {
-        "url": "https://github.com/GregTheGreek/hydra/issues"
+        "url": "https://github.com/ChainSafe/TypeScript-Cli-Template/issues"
     },
-    "homepage": "https://github.com/GregTheGreek/hydra#readme",
+    "homepage": "https://github.com/ChainSafe/TypeScript-Cli-Template#readme",
     "main": "lib/index.js",
     "files": [
         "lib/**/*.d.ts",
@@ -15,13 +15,13 @@
         "lib/**/*.js.map"
     ],
     "bin": {
-        "cli": "lib/index.js"
+        "ts-cli-gen": "lib/index.js"
     },
     "scripts": {
         "clean": "rm -rf lib && rm -f tsconfig.tsbuildinfo",
         "build": "concurrently \"yarn build:lib\" \"yarn build:types\"",
         "build:release": "yarn clean && yarn run build && yarn run build:typedocs",
-        "build:lib": "babel src -x .ts -d lib --source-maps",
+        "build:lib": "babel src -x .ts -d lib --source-maps --copy-files",
         "build:lib:watch": "yarn run build:lib --watch",
         "build:typedocs": "typedoc --exclude src/index.ts --out typedocs src",
         "build:types": "tsc --project tsconfig.build.json --incremental --declaration --outDir lib --emitDeclarationOnly",
@@ -38,7 +38,9 @@
         "benchmark": "ts-node test/benchmarks"
     },
     "dependencies": {
+        "@types/ejs": "^3.0.6",
         "concurrently": "^6.0.0",
+        "ejs": "^3.1.6",
         "yargs": "^16.2.0"
     },
     "devDependencies": {
