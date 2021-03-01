@@ -92,7 +92,7 @@ export async function generateHandler(args: any): Promise<void> {
  * |  |  |  |  |  |-handler.ts
  * |  |  |  |  |  |-[...]
  */
-const createFiles = async (fileStore: IFileStore) => {
+const createFiles = async (fileStore: IFileStore): Promise<void> => {
     console.log(fileStore)
     // 1. Global Options
     let fileName: string = `${TemplateOut.base}/${TemplateOut.globalOptions}`;
@@ -103,18 +103,28 @@ const createFiles = async (fileStore: IFileStore) => {
     await writeFile(fileName, fileStore.rootCommandIndex);
 
     // 3. Commands
-    Promise.resolve(fileStore.commands.forEach(async (command) => {
+    await createCommandFiles(fileStore.commands);
+}
+
+const createCommandFiles = async (
+    commands: ICommandStore[],
+    basePath: string = TemplateOut.base
+): Promise<void> => {
+    for (const command of commands) {
         // Create directory
-        const dirPath = `${TemplateOut.base}/cmds/${command.name}`;
-        writeDir(dirPath);
+        const dirPath = `${basePath}/cmds/${command.name}`;
+        await writeDir(dirPath);
 
         // Write files
-        writeFile(`${dirPath}/${TemplateOut.commandOptions}`, command.options);
-        writeFile(`${dirPath}/${TemplateOut.commandHandler}`, command.handler);
-        writeFile(`${dirPath}/${TemplateOut.commandIndex}`, command.options);
+        await writeFile(`${dirPath}/${TemplateOut.commandOptions}`, command.options);
+        await writeFile(`${dirPath}/${TemplateOut.commandHandler}`, command.handler);
+        await writeFile(`${dirPath}/${TemplateOut.commandIndex}`, command.options);
 
-        // TODO subCommands
-    }));
+        // Handle subCommands
+        if (command.subCommands && command.subCommands.length > 0) {
+            await createCommandFiles(command.subCommands, dirPath);
+        }
+    };
 }
 
 const writeDir = async (dirName: string) => {console.log(dirName + "    <-- directory")};
