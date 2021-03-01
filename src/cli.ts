@@ -14,7 +14,7 @@ const bottomBanner = "For more information, check the CLI docs [...]";
  * The CLI must actually be executed in a different script
  */
 export function getCli(): yargs.Argv {
-  const hydra = yargs
+  const cli = yargs
     .env(name) // TODO: Change this!
     .parserConfiguration({
       // As of yargs v16.1.0 dot-notation breaks strictOptions()
@@ -35,11 +35,11 @@ export function getCli(): yargs.Argv {
 
   // yargs.command and all ./cmds
   for (const cmd of cmds) {
-    registerCommandToYargs(hydra, cmd);
+    registerCommandToYargs(cli, cmd);
   }
 
   // throw an error if we see an unrecognized cmd
-  hydra.recommendCommands().strict();
+  cli.recommendCommands().strict();
 
-  return hydra;
+  return cli;
 }

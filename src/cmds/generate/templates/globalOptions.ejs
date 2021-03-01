@@ -1,0 +1,18 @@
+import {ICliCommandOptions} from "../util";
+
+export interface IGlobalArgs {
+    <% for (const opt of globalOptions) { %>
+        <%= opt.name %>: <%= opt.type %>;
+    <% } %>
+}
+
+export const globalOptions: ICliCommandOptions<IGlobalArgs> = {
+    <% for (const opt of globalOptions) { %>
+        <%= opt.name %>: {
+            description: "<%= opt.description %>",
+            normalize: true,
+            default: "<%= opt.default %>",
+            type: "<%= opt.type %>"
+        },
+    <% } %>
+};
