@@ -1,10 +1,11 @@
 import {ICliCommand} from "../../<%= "../".repeat(2 * depth) %>util";
 import {IGlobalArgs} from "../../<%= "../".repeat(2 * depth) %>options";
 import { I<%= name %>Args, <%= name.toLowerCase() %>Options } from "./options";
-import {<%= name.toLowerCase() %>Handler} from "./handler";
+import {<%= name.toLowerCase() %>Handler} from "./handler";<%- -%>
 <% for (let i = 0; i < subCommands.length; i++) { %>
-import {<%= subCommands[i].name %>} from "./cmds/<%= subCommands[i].name %>";
+import {<%= subCommands[i].name %>} from "./cmds/<%= subCommands[i].name %>";<%- -%>
 <% } %>
+
 export const <%= name.toLowerCase()%>: ICliCommand<Record<never, never>, I<%= name %>Args & IGlobalArgs > = {
   command: "<%= name.toLowerCase() %>",
   

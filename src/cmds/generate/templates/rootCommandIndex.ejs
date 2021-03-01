@@ -1,9 +1,12 @@
 import {ICliCommand} from "../util";
 import {IGlobalArgs} from "../options";
-import {generate} from "./generate";
+import {generate} from "./generate";<%- -%>
+<% for (let i = 0; i < cmdNames.length; i++) { %>
+import {<%= cmdNames[i] -%>} from "./<%= cmdNames[i] %>";<%- -%>
+<% } %>
 
 export const cmds: Required<ICliCommand<IGlobalArgs, Record<never, never>>>["subcommands"] = [
-    <% for (const opt of options) { %>
-        <%= opt.name %>,
+    <% for (let i = 0; i < cmdNames.length; i++) { %>
+    <%= cmdNames[i] -%>, <%- -%>
     <% } %>
 ];

@@ -9,6 +9,7 @@ enum TemplateFiles {
     commandOptions = "./templates/commandOptions.ejs",
     commandHandler = "./templates/commandHandler.ejs",
     commandIndex = "./templates/commandIndex.ejs",
+    rootCommandIndex = "./templates/rootCommandIndex.ejs",
 }
 
 enum TemplateOut {
@@ -16,6 +17,7 @@ enum TemplateOut {
     commandOptions = "options.ts",
     commandHandler = "handler.ts",
     commandIndex = "index.ts",
+    rootCommandIndex = "index.ts",
 }
 
 interface ICommandStore {
@@ -29,6 +31,7 @@ interface ICommandStore {
 
 interface IFileStore {
     globalOptions: string;
+    rootCommandIndex: string;
     commands: ICommandStore[];
 }
 
@@ -41,6 +44,7 @@ export async function generateHandler(args: any): Promise<void> {
     // Collect files
     const fileStore: IFileStore = {
         globalOptions: "",
+        rootCommandIndex: "",
         commands: [] as ICommandStore[]
     };
 
@@ -51,11 +55,13 @@ export async function generateHandler(args: any): Promise<void> {
     fileStore.commands = await generateCommands(config.commands);
 
     // 3. Generate root command index
-
+    const cmdNames = fileStore.commands.map((x: ICommandStore) => x.name);
+    fileStore.rootCommandIndex = await generateEjs(TemplateFiles.rootCommandIndex, {cmdNames}, ejsOpts);
 
     // Write files
-    console.log(fileStore.commands[0]);
-    console.log(fileStore.commands[1]);
+    console.log(fileStore);
+    // console.log(fileStore.commands[0]);
+    // console.log(fileStore.commands[1]);
 }
 
 const generateCommands = async (
