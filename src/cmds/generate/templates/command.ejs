@@ -1,22 +1,22 @@
 import {ICliCommand} from "../../util";
 import {IGlobalArgs} from "../../options";
-import { IGenerateArgs, generateOptions } from "./options";
-import {handler} from "./handler";
-// export type ReturnType = string;
+import { I<%= name %>Args, <%= name.toLowerCase() %>Options } from "./options";
+import {<%= name.toLowerCase() %>Handler} from "./handler";
 
-export const generate: ICliCommand<Record<never, never>, IGenerateArgs & IGlobalArgs > = {
-  command: "generate",
+export const <%= name.toLowerCase()%>: ICliCommand<Record<never, never>, I<%= name %>Args & IGlobalArgs > = {
+  command: "<%= name.toLowerCase() %>",
   
-  describe: "Generates the CLI from a template.",
+  describe: "<%= description %>",
 
   examples: [
     {
-      command: "generate --config ./config.json",
-      description: "Generates the CLI template",
+      // TODO: Change this!
+      command: "",
+      description: "",
     },
   ],
 
-  options: generateOptions,
+  options: <%= name.toLowerCase() %>Options,
 
-  handler: handler
+  handler: <%= name.toLowerCase() %>Handler
 };

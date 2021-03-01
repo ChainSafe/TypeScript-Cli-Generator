@@ -1,7 +1,7 @@
 import {ICliCommand} from "../../util";
 import {IGlobalArgs} from "../../options";
 import { IGenerateArgs, generateOptions } from "./options";
-import {handler} from "./handler";
+import {generateHandler} from "./handler";
 // export type ReturnType = string;
 
 export const generate: ICliCommand<Record<never, never>, IGenerateArgs & IGlobalArgs > = {
@@ -18,5 +18,5 @@ export const generate: ICliCommand<Record<never, never>, IGenerateArgs & IGlobal
 
   options: generateOptions,
 
-  handler: handler
+  handler: generateHandler
 };

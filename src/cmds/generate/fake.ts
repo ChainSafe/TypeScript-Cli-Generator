@@ -30,6 +30,7 @@ const exampleJson = `
         {
             "name": "Account",
             "description": "Account command",
+            "options": [],
             "subCommands": [
                 {
                     "name": "magic",
