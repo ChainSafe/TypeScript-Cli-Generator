@@ -13,11 +13,12 @@ enum TemplateFiles {
 }
 
 enum TemplateOut {
-    globalOptions = "globalOptions.ts",
-    commandOptions = "options.ts",
-    commandHandler = "handler.ts",
-    commandIndex = "index.ts",
-    rootCommandIndex = "index.ts",
+    base = "./_template/src",
+    globalOptions = "/options/globalOptions.ts",
+    commandOptions = "/options.ts",
+    commandHandler = "/handler.ts",
+    commandIndex = "/index.ts",
+    rootCommandIndex = "/index.ts",
 }
 
 interface ICommandStore {
@@ -58,11 +59,59 @@ export async function generateHandler(args: any): Promise<void> {
     const cmdNames = fileStore.commands.map((x: ICommandStore) => x.name);
     fileStore.rootCommandIndex = await generateEjs(TemplateFiles.rootCommandIndex, {cmdNames}, ejsOpts);
 
-    // Write files
-    console.log(fileStore);
+    // 4. Write files
+    await createFiles(fileStore);
+
+    // console.log(fileStore);
     // console.log(fileStore.commands[0]);
     // console.log(fileStore.commands[1]);
 }
+
+/**
+ * |-src/
+ * |  |-index.ts
+ * |  |-cli.ts
+ * |  |-util/
+ * |  |-options/
+ * |  |  |-globalOptions.ts
+ * |  |-cmds/
+ * |  |  |-index.ts
+ * |  |  |-<command>/
+ * |  |  |-[...]
+ * |  |  |-<command>/
+ * |  |  |  |-index.ts
+ * |  |  |  |-options.ts
+ * |  |  |  |-cmds/
+ * |  |  |  |  |-<command>/
+ * |  |  |  |  |  |-index.ts
+ * |  |  |  |  |  |-options.ts
+ * |  |  |  |  |  |-handler.ts
+ * |  |  |  |  |-<command>/
+ * |  |  |  |  |  |-index.ts
+ * |  |  |  |  |  |-options.ts
+ * |  |  |  |  |  |-handler.ts
+ * |  |  |  |  |  |-[...]
+ */
+const createFiles = async (fileStore: IFileStore) => {
+    console.log(fileStore)
+    // 1. Global Options
+    let fileName: string = TemplateOut.base + TemplateOut.globalOptions;
+    await writeFile(fileName, fileStore.globalOptions);
+
+    // 2. Root Command File
+    fileName = TemplateOut.base + "./cmds" + TemplateOut.rootCommandIndex;
+    await writeFile(fileName, fileStore.rootCommandIndex);
+
+    // 3. Commands
+    Promise.resolve(fileStore.commands.forEach(async (command) => {
+        // Create directory
+        const dirPath = TemplateOut.base + "./cmds/" + command.name;
+        writeDir(dirPath);
+    }));
+}
+
+const writeDir = async (dirName: string) => {};
+const writeFile = async (filename: string, data: string) => {};
 
 const generateCommands = async (
     commands: ICommand[],
