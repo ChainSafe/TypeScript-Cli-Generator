@@ -36,8 +36,21 @@ interface IFileStore {
     commands: ICommandStore[];
 }
 
+interface ILoggerState {
+    files: string[];
+}
+
+/**
+ * Globals
+ */
+
 // Use defaults for now
 const ejsOpts = {};
+
+// loggerState
+const loggerState: ILoggerState = {
+    files: [],
+};
 
 export async function generateHandler(args: any): Promise<void> {
     const config = parseConfig(args.config);
@@ -62,10 +75,18 @@ export async function generateHandler(args: any): Promise<void> {
     // 4. Write files
     await createFiles(fileStore);
 
-    // console.log(fileStore);
-    // console.log(fileStore.commands[0]);
-    // console.log(fileStore.commands[1]);
+    // 5. Log summary
+    logSummary();
 }
+
+const logSummary = () => {
+    console.log("Your CLI is ready!\n")
+    console.log("Files written:")
+    console.log("==============")
+    loggerState.files.forEach(file => { console.log(file) });
+
+    console.log("\nMade with ♥️  by ChainSafe (https://chainsafe.io)")
+};
 
 /**
  * |-src/
@@ -93,7 +114,6 @@ export async function generateHandler(args: any): Promise<void> {
  * |  |  |  |  |  |-[...]
  */
 const createFiles = async (fileStore: IFileStore): Promise<void> => {
-    console.log(fileStore)
     // 1. Global Options
     let fileName: string = `${TemplateOut.base}/${TemplateOut.globalOptions}`;
     await writeFile(fileName, fileStore.globalOptions);
@@ -127,8 +147,13 @@ const createCommandFiles = async (
     };
 }
 
-const writeDir = async (dirName: string) => {console.log(dirName + "    <-- directory")};
-const writeFile = async (filename: string, data: string) => {console.log(filename)};
+const writeDir = async (dirName: string) => {
+    loggerState.files.push(dirName + "    <-- directory")
+};
+
+const writeFile = async (filename: string, data: string) => {
+    loggerState.files.push(filename)
+};
 
 const generateCommands = async (
     commands: ICommand[],
