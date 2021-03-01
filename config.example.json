@@ -1,0 +1,32 @@
+{
+    "globalOptions": [
+        {
+            "name": "example",
+            "description": "This is an example",
+            "type": "string",
+            "default": "Hello World!"
+        }
+    ],
+    "commands": [
+        {
+            "name": "Account",
+            "description": "Account command",
+            "subCommands": [
+                {
+                    "name": "magic",
+                    "description": "Perform a magic trick"
+                }
+            ]
+        },
+        {
+            "name": "Log",
+            "description": "Console logs whatever the user inputs",
+            "options": [
+                {
+                    "name": "message",
+                    "description": "The message to console.log"
+                }
+            ]
+        }
+    ]
+}
