@@ -9,7 +9,7 @@ const exampleJson = `
             "default": "http://files.chainsafe.io/api"
         },
         {
-            "name": "",
+            "name": "Blah",
             "description": "This is an example",
             "type": "string",
             "default": "Hello World!"
