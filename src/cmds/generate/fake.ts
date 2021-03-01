@@ -25,7 +25,8 @@ const exampleJson = `
                     "type": "string",
                     "default": "Hello World!"
                 }
-            ]
+            ],
+            "subCommands": []
         },
         {
             "name": "Account",
@@ -35,8 +36,14 @@ const exampleJson = `
                 {
                     "name": "magic",
                     "description": "Perform a magic trick",
-                    "type": "string",
-                    "default": "Hello World!"
+                    "options": [],
+                    "subCommands": []
+                },
+                {
+                    "name": "flip",
+                    "description": "Perform a flip",
+                    "options": [],
+                    "subCommands": []
                 }
             ]
         }

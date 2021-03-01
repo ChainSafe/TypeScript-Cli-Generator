@@ -11,6 +11,7 @@ export interface IOption {
 }
 
 export interface ICommand {
+    depth: number;
     name: string;
     description: string;
     options: IOption[];

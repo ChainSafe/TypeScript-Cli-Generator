@@ -3,5 +3,7 @@ import {IGlobalArgs} from "../options";
 import {generate} from "./generate";
 
 export const cmds: Required<ICliCommand<IGlobalArgs, Record<never, never>>>["subcommands"] = [
-    generate
+    <% for (const opt of options) { %>
+        <%= opt.name %>,
+    <% } %>
 ];

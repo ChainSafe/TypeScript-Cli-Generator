@@ -1,61 +1,110 @@
 import ejs from "ejs";
 import fs from "fs";
 import path from "path";
-import {IConfigFile} from "./configTypes";
+import {ICommand, IConfigFile} from "./configTypes";
 import exampleJson from "./fake";
 
 enum TemplateFiles {
     globalOptions = "./templates/globalOptions.ejs",
     commandOptions = "./templates/commandOptions.ejs",
     commandHandler = "./templates/commandHandler.ejs",
-    command = "./templates/command.ejs",
+    commandIndex = "./templates/commandIndex.ejs",
 }
 
 enum TemplateOut {
     globalOptions = "globalOptions.ts",
     commandOptions = "options.ts",
     commandHandler = "handler.ts",
-    command = "index.ts",
+    commandIndex = "index.ts",
 }
+
+interface ICommandStore {
+    options: string;
+    handler: string;
+    index: string;
+    name: string;
+    depth: number;
+    subCommands: ICommandStore[];
+}
+
+interface IFileStore {
+    globalOptions: string;
+    commands: ICommandStore[];
+}
+
+// Use defaults for now
+const ejsOpts = {};
 
 export async function generateHandler(args: any): Promise<void> {
     const config = parseConfig(args.config);
-    
-    // Use defaults for now
-    const ejsOpts = {};
+
+    // Collect files
+    const fileStore: IFileStore = {
+        globalOptions: "",
+        commands: [] as ICommandStore[]
+    };
 
     // 1. Generate global flags
-    console.log("------global options------")
-    await renderEjs(TemplateFiles.globalOptions, config, ejsOpts, TemplateOut.globalOptions);
+    fileStore.globalOptions = await generateEjs(TemplateFiles.globalOptions, config, ejsOpts);
 
-    // 2. Generate commands
-    for (let i=0; i < config.commands.length; i++) {
-        // First render command options file
-        console.log("-----------------------")
-        console.log("------new command------")
-        console.log("-----------------------")
-        await renderEjs(TemplateFiles.commandOptions, config.commands[i], ejsOpts, TemplateOut.commandOptions);
-        await renderEjs(TemplateFiles.commandHandler, config.commands[i], ejsOpts, TemplateOut.commandHandler);
-        await renderEjs(TemplateFiles.command, config.commands[i], ejsOpts, TemplateOut.command);
-        process.exit(1)
-    }
+    // 2. Generate command files
+    fileStore.commands = await generateCommands(config.commands);
+
+    // 3. Generate root command index
+
+
+    // Write files
+    console.log(fileStore.commands[0]);
+    console.log(fileStore.commands[1]);
 }
 
-const renderEjs = async (
+const generateCommands = async (
+    commands: ICommand[],
+    depth: number = 0,
+    store: ICommandStore[] = [],
+): Promise<ICommandStore[]> => {
+    
+    for (let i=0; i < commands.length; i++) {
+        const command: ICommand = commands[i];
+        if (command.subCommands && command.subCommands.length > 0) { 
+            // Recursively get the subCommands
+            const subCommands: ICommandStore[] = await generateCommands(command.subCommands, depth + 1);
+            const cmd: ICommandStore = await generateCommand(command, depth, subCommands);
+            store.push(cmd);
+            // increment level
+            depth++
+        } else {
+            store.push(await generateCommand(command, depth));
+        }
+    }
+    
+    return store;
+}
+
+const generateCommand = async (command: ICommand, depth: number = 0, subCommands: ICommandStore[] = []): Promise<ICommandStore> => {
+    command.depth = depth;
+    let cmd = {} as ICommandStore;
+    cmd.depth = depth;
+    cmd.name = command.name.toLowerCase();
+    cmd.options = await generateEjs(TemplateFiles.commandOptions, command, ejsOpts);
+    cmd.handler = await generateEjs(TemplateFiles.commandHandler, command, ejsOpts);
+    cmd.index = await generateEjs(TemplateFiles.commandIndex, command, ejsOpts);
+    cmd.subCommands = subCommands;
+    return cmd;
+}
+
+const generateEjs = async (
     template: TemplateFiles, 
     data: Object, 
-    opts: Object,
-    fileOut: string,
-) => {
+    opts: Object
+): Promise<string> => {
     try {
         const templateFile = path.join(__dirname, template);
         const str = await ejs.renderFile(templateFile, data, opts);
         
-        console.log("....BEGIN FILE....")
-        console.log(str)
-        console.log("....END FILE....")
         // const outputFile = path.join(process.cwd(), "./out.ts");
         // fs.writeFileSync(outputFile, str);
+        return str
     } catch (e) {
         console.error(e);
         process.exit(1);
