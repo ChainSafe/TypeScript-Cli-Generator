@@ -48,6 +48,7 @@ interface ILoggerState {
 const ejsOpts = {};
 
 // Vars
+const TEMPLATE_DIR = path.join(process.cwd(), "_template");
 const BASE_PATH = path.join(process.cwd(), "./_template/src");
 
 // loggerState
@@ -117,24 +118,35 @@ const logSummary = () => {
  * |  |  |  |  |  |-[...]
  */
 const createFiles = async (fileStore: IFileStore, outDir: string): Promise<void> => {
-    // 1. Copy to _template to destination
-    fse.copySync(path.join(process.cwd(), "_templates"), path.join(process.cwd(), outDir));
+    const newOutPath = path.join(process.cwd(), outDir);
 
-    // 2. Global Options
-    let fileName: string = `${BASE_PATH}/${TemplateOut.globalOptions}`;
+    // 1. Copy to _template to destination
+    try {
+        await fse.copy(TEMPLATE_DIR, newOutPath);
+    } catch (e) {
+        console.log(e);
+        process.exit(1);
+    }
+
+    // 2. Concat suffix & create cmds dir
+    const newOutSrcPath = path.join(newOutPath, "src");
+    await writeDir(path.join(newOutSrcPath, "cmds"));
+
+    // 3. Global Options
+    let fileName: string = `${newOutSrcPath}/${TemplateOut.globalOptions}`;
     await writeFile(fileName, fileStore.globalOptions);
 
-    // 2. Root Command File
-    fileName = `${BASE_PATH}/cmds/${TemplateOut.rootCommandIndex}`;
+    // 4. Root Command File
+    fileName = `${newOutSrcPath}/cmds/${TemplateOut.rootCommandIndex}`;
     await writeFile(fileName, fileStore.rootCommandIndex);
 
-    // 3. Commands
-    await createCommandFiles(fileStore.commands);
+    // 5. Commands
+    await createCommandFiles(fileStore.commands, newOutSrcPath);
 }
 
 const createCommandFiles = async (
     commands: ICommandStore[],
-    basePath: string = BASE_PATH
+    basePath: string
 ): Promise<void> => {
     for (const command of commands) {
         // Create directory
@@ -156,7 +168,7 @@ const createCommandFiles = async (
 const writeDir = async (dir: string) => {
     try {
         if (!fs.existsSync(dir)) {
-            // fs.mkdirSync(dir);
+            await fs.promises.mkdir(dir, {recursive: true});
             loggerState.files.push(dir + "    <-- directory (created)");
         } 
     } catch (e) {
@@ -168,7 +180,7 @@ const writeDir = async (dir: string) => {
 
 const writeFile = async (filename: string, data: string) => {
     try {
-        // fs.writeFileSync(filename, data);
+        fs.writeFileSync(filename,  data);
         loggerState.files.push(filename + "    (created)");
     } catch (e) {
         loggerState.files.push(filename + "    (already existed)");
