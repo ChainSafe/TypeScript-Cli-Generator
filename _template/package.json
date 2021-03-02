@@ -1,13 +1,13 @@
 {
-    "name": "@ChainSafe/ts-cli-gen",
+    "name": "cli",
     "version": "0.0.1",
-    "description": "This is a TypeScript CLI generator!",
-    "repository": "https://github.com/ChainSafe/TypeScript-Cli-Template.git",
-    "license": "GPL-3.0",
+    "description": "",
+    "repository": "",
+    "license": "",
     "bugs": {
-        "url": "https://github.com/ChainSafe/TypeScript-Cli-Template/issues"
+        "url": ""
     },
-    "homepage": "https://github.com/ChainSafe/TypeScript-Cli-Template#readme",
+    "homepage": "",
     "main": "lib/index.js",
     "files": [
         "lib/**/*.d.ts",
