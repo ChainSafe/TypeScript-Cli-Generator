@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import yargs from "yargs";
-import {YargsError} from "./src/util";
+import {YargsError} from "./util";
 import {getCli} from "./cli";
 import "source-map-support/register";
 
