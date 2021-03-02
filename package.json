@@ -1,5 +1,5 @@
 {
-    "name": "@ChainSafe/ts-cli",
+    "name": "@chainsafe/ts-cli",
     "version": "0.0.1",
     "description": "This is a TypeScript CLI generator!",
     "repository": "https://github.com/ChainSafe/TypeScript-Cli-Template.git",
