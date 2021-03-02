@@ -1,0 +1,19 @@
+{
+    "name": "",
+    "globalOptions": [
+        {
+            "name": "",
+            "description": "",
+            "type": "",
+            "default": ""
+        }
+    ],
+    "commands": [
+        {
+            "name": "",
+            "description": "",
+            "options": [],
+            "subCommands": []
+        }
+    ]
+}
