@@ -1,15 +1,6 @@
 import {ICliCommandOptions} from "../util";
 
-export interface IGlobalArgs {
-  exampleHello: string;
-}
+export interface IGlobalArgs {}
 
 // TODO: change this!
-export const globalOptions: ICliCommandOptions<IGlobalArgs> = {
-  exampleHello: {
-    description: "Override default hello world string",
-    normalize: true,
-    default: "Hello world!",
-    type: "string",
-  },
-};
+export const globalOptions: ICliCommandOptions<IGlobalArgs> = {};

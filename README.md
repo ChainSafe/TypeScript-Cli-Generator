@@ -1,51 +1,40 @@
-# TypeScript CLI Template
+# TypeScript CLI Template Generator
 
-This template was a port of the [Lodestar CLI](https://github.com/ChainSafe/lodestar/), and thus heavily inspired by the design patters of Lodestar.
+The template that is used was a port of the [Lodestar CLI](https://github.com/ChainSafe/lodestar/), and thus heavily inspired by the design patters of Lodestar.
 
-### Using this tempalte
-In its current state, the best way to use this template is to fork it, and modify it that way. The CLI makes use of Yargs, and has added some very helpful utilities to make it easier to use with TypeScript.
+### Using the generator
+The generator requires a configuration file, `config.example.json` is provided as guidance. It can be run as followed:
+```bash
+npx @ChainSafe/ts-cli generate --config ./<local_file> -o ./my-cli
+```
 
-#### Testing it out
-1. `yarn` or `npm install`
-2. `yarn build` or `npm run build`
-3. `./bin/cli --help`
+#### Configuration File
+The configuration file follows the following interface pattern:
+```TypeScript
+interface Config {
+    name: string;               // Name of the CLI
+    globalOptions: IOption[];   // Options available at the global scope
+    commands: ICommand[];       // List of commands
+}
+
+interface IOption {             
+    name: string;               // Name of the option, eg: --<name>
+    description: string;        // Provides a description when --help is used
+    type: string;               // Valid TypeScript type in strings, eg: number
+    default: string;            // The default value
+}
+
+interface ICommand {
+    name: string;               // Name of the command
+    description: string;        // Provides a description when --help is used
+    options: IOption[];         // Options available at the command level
+    subCommands: ICommand[];    // Optional sub-commands
+}
+```
 
 #### Modifications
 Although there is a lot that can be changed, the bulk of the setup has been done for you. The main things that need updating can be searched for by looking up `// TODO: change this!`. After that, the world is your oyster.
 
 ### Roadmap
-- Cli generator
-  - This would allow someone to pass a configuration file, that could scaffold the project for them. Why? Bootstrapping is annoying, and having a quick way to generate all the commands and flags at the beginning will save lots of time.
-  - The vision would be the user gets prompted similar commands when they `npm init`, but they would also pass a configuration file such as: 
-  ```json
-    {
-        globalOptions: [
-            {
-                name: "example",
-                description: "This is an example",
-                ...
-            }
-        ],
-        commands: [
-            {
-                name: "Account",
-                description: "Account command",
-                subCommands: [
-                    {
-                        ...more commands
-                    }
-                ]
-            },
-            {
-                name: "Log",
-                description: "Console logs whatever the user inputs",
-                options: [
-                    {
-                        name: "message",
-                        description: "The message to console.log"
-                    }
-                ]
-            }
-        ]
-    }
-  ```
+- [x] Cli generator
+- [ ] ?

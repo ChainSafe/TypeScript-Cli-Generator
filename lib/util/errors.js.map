@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/util/errors.ts"],"names":["YargsError","Error"],"mappings":";;;;;;;AAAA;AACA;AACA;AACO,MAAMA,UAAN,SAAyBC,KAAzB,CAA+B;;;AAAE","sourcesContent":["/**\n * Expected error that shouldn't print a stack trace\n */\nexport class YargsError extends Error {};"],"file":"errors.js"}

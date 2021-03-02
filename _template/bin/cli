@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+// TODO: Change this!
+/**
+ * You should change the name of this file to the name of your CLI app.
+ * eg: cli -> lodestar
+ */
+require('../lib');
