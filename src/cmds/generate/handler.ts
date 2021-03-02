@@ -1,9 +1,8 @@
 import ejs from "ejs";
 import fs from "fs";
 import fse from "fs-extra";
-import path, { dirname } from "path";
+import path from "path";
 import {ICommand, IConfigFile} from "./configTypes";
-import exampleJson from "./fake";
 
 enum TemplateFiles {
     globalOptions = "./templates/globalOptions.ejs",
@@ -57,7 +56,7 @@ const loggerState: ILoggerState = {
 };
 
 export async function generateHandler(args: any): Promise<void> {
-    const config = parseConfig(args.config);
+    const config = await parseConfig(args.config);
 
     // Collect files
     const fileStore: IFileStore = {
@@ -230,22 +229,20 @@ const generateEjs = async (
 ): Promise<string> => {
     try {
         const templateFile = path.join(__dirname, template);
-        const str = await ejs.renderFile(templateFile, data, opts);
-        
-        // const outputFile = path.join(process.cwd(), "./out.ts");
-        // fs.writeFileSync(outputFile, str);
-        return str
+        return await ejs.renderFile(templateFile, data, opts);
     } catch (e) {
         console.error(e);
         process.exit(1);
     }
 }
 
-const parseConfig = (file: string): IConfigFile => {
-    // TODO handle the file import better
-    // let json = require(file);
-    // temp override
-    let json = exampleJson;
-    return JSON.parse(json) as IConfigFile;
+const parseConfig = async (file: string): Promise<IConfigFile> => {
+    try {
+        const config = fs.readFileSync(path.join(process.cwd(), file));
+        return JSON.parse(config.toString()) as IConfigFile;
+    } catch (e) {
+        console.error(e);
+        process.exit(1);
+    }
   }
   
