@@ -12,7 +12,10 @@
     "files": [
         "lib/**/*.d.ts",
         "lib/**/*.js",
-        "lib/**/*.js.map"
+        "lib/**/*.js.map",
+        "lib/**/*.ejs",
+        "_template/**",
+        "_configs"
     ],
     "bin": {
         "ts-cli": "./bin/cli"
