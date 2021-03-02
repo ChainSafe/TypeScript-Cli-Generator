@@ -46,10 +46,6 @@ interface ILoggerState {
 // Use defaults for now
 const ejsOpts = {};
 
-// Vars
-const TEMPLATE_DIR = path.join(process.cwd(), "_template");
-const BASE_PATH = path.join(process.cwd(), "./_template/src");
-
 // loggerState
 const loggerState: ILoggerState = {
     files: [],
@@ -121,12 +117,12 @@ const createFiles = async (fileStore: IFileStore, outDir: string): Promise<void>
 
     // 1. Copy to _template to destination
     try {
-        await fse.copy(TEMPLATE_DIR, newOutPath);
+        const templates = path.join(__dirname,"../../../_template");
+        await fse.copy(templates, newOutPath);
     } catch (e) {
         console.log(e);
         process.exit(1);
     }
-
     // 2. Concat suffix & create cmds dir
     const newOutSrcPath = path.join(newOutPath, "src");
     await writeDir(path.join(newOutSrcPath, "cmds"));
