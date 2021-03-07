@@ -46,7 +46,9 @@
         "concurrently": "^6.0.0",
         "ejs": "^3.1.6",
         "fs-extra": "^9.1.0",
+        "github-download": "^0.5.0",
         "source-map-support": "^0.5.19",
+        "superagent": "^6.1.0",
         "yargs": "^16.2.0"
     },
     "devDependencies": {

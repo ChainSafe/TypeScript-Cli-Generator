@@ -3,6 +3,7 @@ import fs from "fs";
 import fse from "fs-extra";
 import path from "path";
 import {ICommand, IConfigFile} from "./configTypes";
+import {installTemplate} from "./util";
 
 enum TemplateFiles {
     globalOptions = "./templates/globalOptions.ejs",
@@ -115,28 +116,29 @@ const logSummary = () => {
 const createFiles = async (fileStore: IFileStore, outDir: string): Promise<void> => {
     const newOutPath = path.join(process.cwd(), outDir);
 
-    // 1. Copy to _template to destination
     try {
-        const templates = path.join(__dirname,"../../../_template");
-        await fse.copy(templates, newOutPath);
+        // 1. Copy to _template to destination
+        await installTemplate(newOutPath);
+        
+        // 2. Concat suffix & create cmds dir
+        const newOutSrcPath = path.join(newOutPath, "src");
+        await writeDir(path.join(newOutSrcPath, "cmds"));
+
+        // 3. Global Options
+        let fileName: string = `${newOutSrcPath}/${TemplateOut.globalOptions}`;
+        await writeFile(fileName, fileStore.globalOptions);
+
+        // 4. Root Command File
+        fileName = `${newOutSrcPath}/cmds/${TemplateOut.rootCommandIndex}`;
+        await writeFile(fileName, fileStore.rootCommandIndex);
+
+        // 5. Commands
+        await createCommandFiles(fileStore.commands, newOutSrcPath);
+    
     } catch (e) {
         console.log(e);
         process.exit(1);
     }
-    // 2. Concat suffix & create cmds dir
-    const newOutSrcPath = path.join(newOutPath, "src");
-    await writeDir(path.join(newOutSrcPath, "cmds"));
-
-    // 3. Global Options
-    let fileName: string = `${newOutSrcPath}/${TemplateOut.globalOptions}`;
-    await writeFile(fileName, fileStore.globalOptions);
-
-    // 4. Root Command File
-    fileName = `${newOutSrcPath}/cmds/${TemplateOut.rootCommandIndex}`;
-    await writeFile(fileName, fileStore.rootCommandIndex);
-
-    // 5. Commands
-    await createCommandFiles(fileStore.commands, newOutSrcPath);
 }
 
 const createCommandFiles = async (
