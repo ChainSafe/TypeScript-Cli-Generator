@@ -17,7 +17,8 @@ export const generateOptions: ICliCommandOptions<IGenerateArgs> = {
     description: "Directory where the generator will write to.",
     alias: "o",
     normalize: true,
-    demandOption: true,
-    type: "string"
+    demandOption: false,
+    type: "string",
+    default: "ts-cli-template"
   }
 };
