@@ -28,18 +28,20 @@ export const installTemplate = (installPath: string): Promise<any> => {
     request
       .get(source)
       .on('error', (error: any) => reject(error))
-      .pipe(fs.createWriteStream(zipDest))
+      .pipe(fs.createWriteStream(zipDest)) // Download to ~/.ts-cli
       .on('finish', () => {
-        const zipFile = new admZip(zipDest);
-        zipFile.extractAllTo(configFolder);
-        console.log('Finished unzip');
-    
-        fse.copy(extractOutputDir, installPath, (err: any) => {
-          if (err) reject(err)
-          console.log(`Copied template to: ${installPath}`)
-          // TODO Cleanup
+        try {
+          // Unzip download into ~/.ts-cli
+          const zipFile = new admZip(zipDest);
+          zipFile.extractAllTo(configFolder);
+          // Copy the template to the location chosen by the user
+          fse.copySync(extractOutputDir, installPath);
+          // Cleanup the cli directory
+          fse.removeSync(configFolder);
           resolve(null);
-        });
+        } catch (err) {
+          reject(err)
+        }
       });
   });
 };
