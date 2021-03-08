@@ -1,6 +1,5 @@
 import ejs from "ejs";
 import fs from "fs";
-import fse from "fs-extra";
 import path from "path";
 import {ICommand, IConfigFile} from "./configTypes";
 import {installTemplate} from "./util";
