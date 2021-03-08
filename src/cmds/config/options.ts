@@ -9,7 +9,8 @@ export const configOptions: ICliCommandOptions<IConfigArgs> = {
     description: "File where the config file will be written to.",
     alias: "o",
     normalize: true,
-    demandOption: true,
+    demandOption: false,
+    default: "config.json",
     type: "string"
   }
 };
