@@ -2,10 +2,22 @@
 
 The template that is used was a port of the [Lodestar CLI](https://github.com/ChainSafe/lodestar/), and thus heavily inspired by the design patters of Lodestar.
 
+### Available Commands
+
+```bash
+Commands:
+  generate  Generates the CLI from a template.
+  config    Creates an empty configuration file.
+
+Options:
+  -h, --help     Show help
+  -v, --version  Show version number
+```
+
 ### Using the generator
 The generator requires a configuration file, `config.example.json` is provided as guidance. It can be run as followed:
 ```bash
-npx @ChainSafe/ts-cli generate --config ./<local_file> -o ./my-cli
+npx @chainsafe/ts-cli generate --config ./<local_file> -o ./my-cli
 ```
 
 #### Configuration File
